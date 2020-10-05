@@ -1,0 +1,12 @@
+.arrow {
+    font-size: 20px;
+}
+
+.left {
+    transform: rotate(180deg);
+}
+
+.arrow:hover {
+    cursor: pointer;
+    color:#cecece;
+}
