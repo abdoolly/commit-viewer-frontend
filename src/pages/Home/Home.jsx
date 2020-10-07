@@ -7,6 +7,7 @@ const Home = () => {
     }
     return (
         <div>
+            <h1>Hello world</h1>
             <Calendar onDateSelection={callOnDateSelection} />
         </div>
     );

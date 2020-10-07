@@ -1,5 +1,6 @@
 import { DateTime } from 'luxon';
-import React, { useCallback, useMemo, useState } from 'react';
+import { none } from 'ramda';
+import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Arrow from '../Arrow/Arrow';
 import BoldText from '../BoldText/BoldText';
 import NumSquare from '../NumSquare/NumSquare';
@@ -29,6 +30,7 @@ const Calendar = ({
     let [prev, setPrevDate] = useState(current.minus({ months: 1 }));
     const [selectedDates, setSelectedDates] = useState({});
     const [dateRange, setDateRange] = useState(null);
+    const [hideCalendar, setHideCalendar] = useState(true);
 
     let filteredCurrent = useMemo(() => filterMonthDays(current), [current]);
     let filteredPrev = useMemo(() => filterMonthDays(prev), [prev]);
@@ -112,71 +114,99 @@ const Calendar = ({
 
                 // call the other functions outside here
                 onDateSelection(new Date(keys[1]), new Date(keys[0]));
+
+                // since we selected a date range already then we need to hide the calendar
+                setTimeout(() => setHideCalendar(true), 400);
             }
         }
     }, [selectedDates]);
 
-    return (
-        <div className="calendar">
-            <div className="left-comp">
-                <div className="upper-part-left" >
-                    <Arrow direction="left" size={25} onClick={onClickLeftArrow} />
-                    <BoldText text={`${getMonthName(prev)} ${getYear(prev)}`} />
-                </div>
-                <br />
-                <table>
-                    <thead>
-                        <tr>
-                            {weekdays}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            getWeeksView({
-                                weekArray: filteredPrev,
-                                onClickDayNum,
-                                dateRange,
-                                selectedDates
-                            })
-                        }
-                    </tbody>
-                </table>
-            </div>
+    const onClickCalendarInput = () => {
+        setHideCalendar(!hideCalendar);
+    }
 
-            <div className="left-comp">
-                <div className="upper-part-right" >
-                    <BoldText text={`${getMonthName(current)} ${getYear(current)}`} />
-                    {<Arrow size={25} isVisible={!shouldRemoveRightArrow} onClick={onClickRightArrow} />}
+    // the listener that catches the outside click
+    const onClickOutside = (e) => {
+        if (!document.getElementById('calendar-id').contains(e.target)) {
+            setHideCalendar(true);
+        }
+    };
+
+    // making an onclick listener to make the calendar hide on clicking outside
+    useEffect(() => {
+        window.addEventListener('click', onClickOutside);
+        return () => window.removeEventListener('click', onClickOutside);
+    }, []);
+    const dateRangeText = useMemo(() => {
+        if (!dateRange || Object.keys(dateRange).length !== 2)
+            return '';
+
+        return `${dateRange.start}, ${dateRange.end}`;
+    }, [dateRange]);
+
+    return (
+        <div id="calendar-id" className="parent-calendar">
+            <input onClick={onClickCalendarInput} value={dateRangeText} onChange={() => { }} className="calendar-input" type="text" placeholder="Click to display calendar" />
+            <div className="calendar" style={{ display: `${hideCalendar ? 'none' : ''}` }}>
+                <div className="left-comp">
+                    <div className="upper-part-left" >
+                        <Arrow direction="left" size={25} onClick={onClickLeftArrow} />
+                        <BoldText text={`${getMonthName(prev)} ${getYear(prev)}`} />
+                    </div>
+                    <br />
+                    <table>
+                        <thead>
+                            <tr>
+                                {weekdays}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                getWeeksView({
+                                    weekArray: filteredPrev,
+                                    onClickDayNum,
+                                    dateRange,
+                                    selectedDates
+                                })
+                            }
+                        </tbody>
+                    </table>
                 </div>
-                <br />
-                <table>
-                    <thead>
-                        <tr>
-                            {weekdays}
-                        </tr>
-                    </thead>
-                    <tbody>
-                        {
-                            getWeeksView({
-                                weekArray: filteredCurrent,
-                                onClickDayNum,
-                                dateRange,
-                                selectedDates
-                            })
-                        }
-                    </tbody>
-                </table>
-            </div>
-            <div className="cal-footer">
-                <hr />
-                <div >
-                    <a href="#" onClick={onClickToday}>Today</a>
-                    <a href="#" onClick={onClickStart}>Start</a>
-                    <a href="#" onClick={onClickEnd}>End</a>
+
+                <div className="left-comp">
+                    <div className="upper-part-right" >
+                        <BoldText text={`${getMonthName(current)} ${getYear(current)}`} />
+                        {<Arrow size={25} isVisible={!shouldRemoveRightArrow} onClick={onClickRightArrow} />}
+                    </div>
+                    <br />
+                    <table>
+                        <thead>
+                            <tr>
+                                {weekdays}
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {
+                                getWeeksView({
+                                    weekArray: filteredCurrent,
+                                    onClickDayNum,
+                                    dateRange,
+                                    selectedDates
+                                })
+                            }
+                        </tbody>
+                    </table>
+                </div>
+                <div className="cal-footer">
+                    <hr />
+                    <div >
+                        <a href="#" onClick={onClickToday}>Today</a>
+                        <a href="#" onClick={onClickStart}>Start</a>
+                        <a href="#" onClick={onClickEnd}>End</a>
+                    </div>
                 </div>
             </div>
         </div>
-
     );
 };
 

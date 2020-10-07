@@ -9,6 +9,9 @@
     display: inline-grid;
     grid-template-columns: 1fr 1fr;
     column-gap: 20px;
+    position: absolute;
+    top: 30px;
+    left: 0;
 }
 
 .left-comp{
@@ -67,4 +70,12 @@
     color: rgb(86, 139, 255);
     text-decoration: none;
     font-weight: bold;
+}
+
+.parent-calendar {
+    position: relative;
+}
+
+.calendar-input {
+    width: 574px;
 }
