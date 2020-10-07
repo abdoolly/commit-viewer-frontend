@@ -33,11 +33,6 @@ const filterMonthDays = (date) => {
     let monthName = getMonthName(date);
     let monthNum = getMonth(date);
     let year = getYear(date);
-    let isAllDisabledUntilToday = false;
-
-    if (getMonthName(today) === monthName && getYear(today) === year && getDayNumber(today) !== 1) {
-        isAllDisabledUntilToday = true;
-    }
 
     let weekdays = [];
     let weekCounter = 0;
@@ -54,7 +49,6 @@ const filterMonthDays = (date) => {
             dayNum,
             dayName: getDayName(initialStart),
             weekday: weekday,
-            isDisabled: isAllDisabledUntilToday ? getDayNumber(today) > dayNum : false,
             isToday: today.toISODate() === initialStart.toISODate(),
             date: initialStart.toISODate()
         }
