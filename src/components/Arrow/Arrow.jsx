@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { ReactComponent as ArrowIcon } from './arrow.svg';
 import './Arrow.css';
 
-const Arrow = ({ direction = 'right', size = 30 }) => {
+const Arrow = ({ direction = 'right', size = 30, isVisible = true, onClick }) => {
     const [color, setColor] = useState('#cecece');
     const onMouseOver = () => setColor('black');
     const onMouseOut = () => setColor('#cecece');
@@ -15,6 +15,8 @@ const Arrow = ({ direction = 'right', size = 30 }) => {
             fill={color}
             onMouseOver={onMouseOver}
             onMouseOut={onMouseOut}
+            visibility={isVisible ? 'visible' : 'hidden'}
+            onClick={onClick}
         />
     );
 };

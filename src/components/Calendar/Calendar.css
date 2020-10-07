@@ -1,3 +1,70 @@
 .calendar {
-    
+    padding: 16px;   
+    border: 0;
+    box-shadow: 0 2px 16px rgba(0,0,0,0.15);
+    margin: 0;
+    box-sizing: border-box;
+    user-select: none;
+    border-radius: 4px;
+    display: inline-grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 20px;
+}
+
+.left-comp{
+    display: flex;
+    flex-direction: column;
+}
+
+.upper-part-left {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 25px 1fr;
+}
+
+.upper-part-right {
+    display: grid;
+    width: 100%;
+    grid-template-columns: 1fr 25px;
+}
+
+.upper-part-left .bold-text {
+    justify-self: center;
+    margin-right: 25px;
+}
+
+.upper-part-right .bold-text {
+    justify-self: center;
+    margin-left: 25px;
+}
+
+.calendar table thead > tr > td ,.calendar table tbody > tr > td {
+    text-align: center;
+    width: 35px;
+    height: 36px;
+}
+
+.cal-footer {
+    grid-column-start: 1;
+    grid-column-end: 3;
+    display: grid;
+    justify-items: center;
+}
+
+.cal-footer > div {
+    width: 50%;
+    display: inline-flex; 
+    justify-content: space-around;
+}
+
+.cal-footer > hr {
+    border: solid;
+    border-width: 0.5px;
+    border-color: #dadada;
+}
+
+.cal-footer div > a {
+    color: rgb(86, 139, 255);
+    text-decoration: none;
+    font-weight: bold;
 }

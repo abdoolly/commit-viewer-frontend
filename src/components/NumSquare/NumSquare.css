@@ -6,7 +6,13 @@
     align-items: center;
 }
 
-.num-square:hover {
+.isToday { 
+    border: solid;
+    border-width: 0.5px;
+    background-color: rgba(83, 163, 255, 0.445);
+}
+
+.num-square-hover:hover {
     background-color: rgb(230, 230, 230);
     cursor: pointer;
 }
