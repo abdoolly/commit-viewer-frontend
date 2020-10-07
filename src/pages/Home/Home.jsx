@@ -1,11 +1,13 @@
 import React from 'react';
-import Arrow from '../../components/Arrow/Arrow';
 import Calendar from '../../components/Calendar/Calendar';
 
 const Home = () => {
+    const callOnDateSelection = (start, end) => {
+        console.log('start, end', start, end);
+    }
     return (
         <div>
-            <Calendar />
+            <Calendar onDateSelection={callOnDateSelection} />
         </div>
     );
 };

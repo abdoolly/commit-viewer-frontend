@@ -28,7 +28,6 @@ const weekdays = [
 ];
 
 const filterMonthDays = (date) => {
-    console.log('xxx');
     let today = DateTime.fromJSDate(new Date());
     let monthName = getMonthName(date);
     let monthNum = getMonth(date);
@@ -74,7 +73,6 @@ const filterMonthDays = (date) => {
 
         // if the next day was in the next month then break
         if (getMonthName(initialStart.plus({ days: 1 })) !== monthName) {
-            // weekdays[weekCounter] = completeWeekArr(weekdays[weekCounter]);
             break;
         }
     }
@@ -112,9 +110,13 @@ const isThisLastMonth = (current) => {
     return getMonthName(today) === getMonthName(current) && getYear(today) === getYear(current);
 };
 
-const Calendar = () => {
+const Calendar = ({
+    onDateSelection
+}) => {
     let [current, setCurrentDate] = useState(DateTime.fromJSDate(new Date()));
     let [prev, setPrevDate] = useState(current.minus({ months: 1 }));
+    const [selectedDates, setSelectedDates] = useState({});
+    const [dateRange, setDateRange] = useState(null);
 
     let filteredCurrent = useMemo(() => filterMonthDays(current), [current]);
     let filteredPrev = useMemo(() => filterMonthDays(prev), [prev]);
@@ -131,6 +133,76 @@ const Calendar = () => {
         setCurrentDate(current.plus({ months: 1 }));
         setPrevDate(prev.plus({ months: 1 }));
     }, [current, prev]);
+
+    // on click today navigate the user to today in the calendar
+    const onClickToday = useCallback(() => {
+        let today = DateTime.fromJSDate(new Date());
+        setCurrentDate(today);
+        setPrevDate(today.minus({ months: 1 }));
+    }, []);
+
+    const onClickStart = () => {
+        if (!dateRange || Object.keys(dateRange).length !== 2)
+            return;
+
+        let startDate = new Date(dateRange.start);
+        let endDate = new Date(dateRange.end);
+
+        if (startDate > endDate) {
+            startDate = DateTime.fromJSDate(startDate);
+            setCurrentDate(startDate);
+            setPrevDate(startDate.minus({ months: 1 }));
+        }
+
+        if (startDate < endDate) {
+            startDate = DateTime.fromJSDate(startDate);
+            setCurrentDate(startDate.plus({ months: 1 }));
+            setPrevDate(startDate);
+        }
+    };
+
+    const onClickEnd = () => {
+        if (!dateRange || Object.keys(dateRange).length !== 2)
+            return;
+
+        let startDate = new Date(dateRange.start);
+        let endDate = new Date(dateRange.end);
+
+        if (startDate < endDate) {
+            endDate = DateTime.fromJSDate(endDate);
+            setCurrentDate(endDate);
+            setPrevDate(endDate.minus({ months: 1 }));
+        }
+
+        if (startDate > endDate) {
+            endDate = DateTime.fromJSDate(endDate);
+            setCurrentDate(endDate.plus({ months: 1 }));
+            setPrevDate(endDate);
+        }
+    };
+
+    const onClickDayNum = useCallback(({ date }) => {
+        const numDates = Object.keys(selectedDates).length;
+
+        // if more than 2 then reset and only select the newly selected value
+        if (numDates >= 2) {
+            setSelectedDates({ [date]: true });
+            setDateRange(null);
+        }
+
+        if (numDates < 2) {
+            const newSelectedDates = Object.assign({ [date]: true }, selectedDates);
+            setSelectedDates(newSelectedDates);
+            const keys = Object.keys(newSelectedDates);
+            if (keys.length === 2) {
+                // set the dateRange
+                setDateRange({ start: keys[1], end: keys[0] });
+
+                // call the other functions outside here
+                onDateSelection(new Date(keys[1]), new Date(keys[0]));
+            }
+        }
+    }, [selectedDates]);
 
     return (
         <div className="calendar">
@@ -153,7 +225,7 @@ const Calendar = () => {
                                     <tr key={index.toString()}>
                                         {week.map((dayObject, i) => {
                                             if (dayObject)
-                                                return (<td key={i.toString()}><NumSquare isToday={dayObject.isToday} text={dayObject.dayNum} isDisabled={dayObject.isDisabled} /></td>);
+                                                return (<td key={i.toString()}><NumSquare date={dayObject.date} onClick={onClickDayNum} selectedDateRange={dateRange} selectedDates={selectedDates} isToday={dayObject.isToday} text={dayObject.dayNum} isDisabled={dayObject.isDisabled} /></td>);
 
                                             return (<td key={i.toString()}><NumSquare text='' isDisabled={true} /></td>);
                                         })}
@@ -185,7 +257,7 @@ const Calendar = () => {
                                         {week.map((dayObject, i) => {
 
                                             if (dayObject)
-                                                return (<td key={i.toString()}><NumSquare isToday={dayObject.isToday} text={dayObject.dayNum} isDisabled={dayObject.isDisabled} /></td>);
+                                                return (<td key={i.toString()}><NumSquare date={dayObject.date} onClick={onClickDayNum} selectedDateRange={dateRange} selectedDates={selectedDates} isToday={dayObject.isToday} text={dayObject.dayNum} isDisabled={dayObject.isDisabled} /></td>);
 
                                             return (<td key={i.toString()}><NumSquare text='' isDisabled={true} /></td>);
                                         })}
@@ -199,9 +271,9 @@ const Calendar = () => {
             <div className="cal-footer">
                 <hr />
                 <div >
-                    <a href="#">Today</a>
-                    <a href="#">Start</a>
-                    <a href="#">End</a>
+                    <a href="#" onClick={onClickToday}>Today</a>
+                    <a href="#" onClick={onClickStart}>Start</a>
+                    <a href="#" onClick={onClickEnd}>End</a>
                 </div>
             </div>
         </div>
