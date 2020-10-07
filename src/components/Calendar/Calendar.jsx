@@ -132,17 +132,11 @@ const Calendar = ({
                     </thead>
                     <tbody>
                         {
-                            filteredPrev.map((week, index) => {
-                                return (
-                                    <tr key={index.toString()}>
-                                        {week.map((dayObject, i) => {
-                                            if (dayObject)
-                                                return (<td key={i.toString()}><NumSquare date={dayObject.date} onClick={onClickDayNum} selectedDateRange={dateRange} selectedDates={selectedDates} isToday={dayObject.isToday} text={dayObject.dayNum} isDisabled={dayObject.isDisabled} /></td>);
-
-                                            return (<td key={i.toString()}><NumSquare text='' isDisabled={true} /></td>);
-                                        })}
-                                    </tr>
-                                );
+                            getWeeksView({
+                                weekArray: filteredPrev,
+                                onClickDayNum,
+                                dateRange,
+                                selectedDates
                             })
                         }
                     </tbody>
@@ -163,18 +157,11 @@ const Calendar = ({
                     </thead>
                     <tbody>
                         {
-                            filteredCurrent.map((week, index) => {
-                                return (
-                                    <tr key={index.toString()}>
-                                        {week.map((dayObject, i) => {
-
-                                            if (dayObject)
-                                                return (<td key={i.toString()}><NumSquare date={dayObject.date} onClick={onClickDayNum} selectedDateRange={dateRange} selectedDates={selectedDates} isToday={dayObject.isToday} text={dayObject.dayNum} isDisabled={dayObject.isDisabled} /></td>);
-
-                                            return (<td key={i.toString()}><NumSquare text='' isDisabled={true} /></td>);
-                                        })}
-                                    </tr>
-                                );
+                            getWeeksView({
+                                weekArray: filteredCurrent,
+                                onClickDayNum,
+                                dateRange,
+                                selectedDates
                             })
                         }
                     </tbody>
@@ -191,6 +178,35 @@ const Calendar = ({
         </div>
 
     );
+};
+
+/**
+ * @description a function that receives some parameters to construct the week view 
+ * @param {*} param0 
+ */
+const getWeeksView = ({ weekArray, onClickDayNum, dateRange, selectedDates }) => {
+    return weekArray.map((week, index) => {
+        return (
+            <tr key={index.toString()}>
+                {week.map((dayObject, i) => {
+                    if (dayObject) {
+                        return (
+                            <td key={i.toString()}>
+                                <NumSquare date={dayObject.date}
+                                    onClick={onClickDayNum}
+                                    selectedDateRange={dateRange}
+                                    selectedDates={selectedDates}
+                                    isToday={dayObject.isToday}
+                                    text={dayObject.dayNum}
+                                    isDisabled={dayObject.isDisabled} />
+                            </td>);
+                    }
+
+                    return (<td key={i.toString()}><NumSquare text='' isDisabled={true} /></td>);
+                })}
+            </tr>
+        );
+    })
 };
 
 export default Calendar;
