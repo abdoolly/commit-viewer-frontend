@@ -28,8 +28,8 @@ const getRepoCommits = async ({ username, repoName, start, end }) =>
 const Home = () => {
 
     const [inputs, setInputs] = useState({
-        username: 'abdoolly',
-        repoName: 'ts-node-builder',
+        username: '',
+        repoName: '',
         start: '',
         end: ''
     });
