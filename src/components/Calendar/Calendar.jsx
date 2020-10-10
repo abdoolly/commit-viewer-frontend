@@ -24,12 +24,13 @@ const isThisLastMonth = (current) => {
 };
 
 const Calendar = ({
-    onDateSelection
+    onDateSelection,
+    range = null
 }) => {
     let [current, setCurrentDate] = useState(DateTime.fromJSDate(new Date()));
     let [prev, setPrevDate] = useState(current.minus({ months: 1 }));
     const [selectedDates, setSelectedDates] = useState({});
-    const [dateRange, setDateRange] = useState(null);
+    const [dateRange, setDateRange] = useState(range);
     const [hideCalendar, setHideCalendar] = useState(true);
 
     let filteredCurrent = useMemo(() => filterMonthDays(current), [current]);

@@ -1,0 +1,49 @@
+.commit {
+    display: inline-flex;
+    background-color: ghostwhite;
+    margin: 15px 0px;
+    padding: 10px 20px;
+    width: 525px;
+    border-radius: 10px;
+    align-items: center;
+}
+
+.avatar {
+    width: 100px;
+    height: 100px;
+    border-radius: 100%;
+    background-position: center center;
+    background-repeat: no-repeat;
+    background-size: 100px 100px;
+}
+
+.signed {
+    padding: 5px;
+    height: 20px;
+    border-radius: 10px;
+}
+
+.signed-true {
+    background-color: chartreuse;
+}
+
+.signed-false {
+    background-color: rgb(255, 73, 73);
+    color: white;
+}
+
+.text-info {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    column-gap: 70px;
+    margin-left: 20px;
+    padding: 10px;
+    row-gap: 10px;
+}
+
+.orgs {
+    /* grid-column-start: 0;
+    grid-column-end: 2; */
+    grid-column: 1 / -1;
+    max-width: 360px;
+}

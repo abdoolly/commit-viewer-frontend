@@ -2,6 +2,49 @@ import React from 'react';
 import NormalText from '../NormalText/NormalText';
 import './NumSquare.css';
 
+// check if the current date of the current component is between the date range then
+// make it highlighted
+const isHighlighted = (selectedDateRange, date) => {
+    if (!selectedDateRange)
+        return false;
+
+    let { start, end } = selectedDateRange;
+
+    // if this is the start or the end then it's selected already and do not need to be highlighted
+    if (date === start || date === end) {
+        return false;
+    }
+
+    start = new Date(start);
+    end = new Date(end);
+    let dateObj = new Date(date);
+
+    // if the start is after the end then the date should exist between before the start and after the end
+    if (start > end && (dateObj < start && dateObj > end)) {
+        return true;
+    }
+
+    // if the start is before the end then the date should exist after the start and before the end
+    if (start < end && (dateObj > start && dateObj < end)) {
+        return true;
+    }
+};
+
+const isSquareSelected = (selectedDateRange, date) => {
+    if (!selectedDateRange)
+        return false;
+
+    let { start, end } = selectedDateRange;
+
+    // if this is the start or the end then it's selected already and do not need to be highlighted
+    if (date === start || date === end) {
+        return true;
+    }
+
+    return false;
+}
+
+
 const NumSquare = ({
     text,
     color,
@@ -13,33 +56,6 @@ const NumSquare = ({
     selectedDateRange,
     selectedDates
 }) => {
-
-    const isHighlighted = () => {
-        if (!selectedDateRange)
-            return false;
-
-        let { start, end } = selectedDateRange;
-
-        // if this is the start or the end then it's selected already and do not need to be highlighted
-        if (date === start || date === end) {
-            return false;
-        }
-
-        start = new Date(start);
-        end = new Date(end);
-        let dateObj = new Date(date);
-
-        // if the start is after the end then the date should exist between before the start and after the end
-        if (start > end && (dateObj < start && dateObj > end)) {
-            return true;
-        }
-
-        // if the start is before the end then the date should exist after the start and before the end
-        if (start < end && (dateObj > start && dateObj < end)) {
-            return true;
-        }
-    };
-
     const isSelected = selectedDates ? Boolean(selectedDates[date]) : false;
     const allowHover = !(isDisabled || isToday || isSelected);
 
@@ -52,8 +68,8 @@ const NumSquare = ({
         <div className={
             `num-square 
             ${allowHover ? 'num-square-hover' : ''}
-            ${isHighlighted() ? 'highlight' : ''}
-            ${isSelected ? 'selected' : ''}
+            ${isHighlighted(selectedDateRange, date) ? 'highlight' : ''}
+            ${isSelected || isSquareSelected(selectedDateRange, date) ? 'selected' : ''}
             ${removeHover ? 'remove-hover' : ''}
             ${isDisabled ? 'disabled' : ''}
             ${isToday ? 'isToday' : ''}
