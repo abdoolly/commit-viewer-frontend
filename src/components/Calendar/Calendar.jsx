@@ -1,5 +1,4 @@
 import { DateTime } from 'luxon';
-import { none } from 'ramda';
 import React, { useCallback, useEffect, useMemo, useState } from 'react';
 import Arrow from '../Arrow/Arrow';
 import BoldText from '../BoldText/BoldText';
@@ -120,7 +119,7 @@ const Calendar = ({
                 setTimeout(() => setHideCalendar(true), 400);
             }
         }
-    }, [selectedDates]);
+    }, [selectedDates, onDateSelection]);
 
     const onClickCalendarInput = () => {
         setHideCalendar(!hideCalendar);
