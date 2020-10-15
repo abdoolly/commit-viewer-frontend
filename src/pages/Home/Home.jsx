@@ -6,8 +6,8 @@ import Spinner from '../../components/Spinner/Spinner';
 import './Home.css';
 import axios from 'axios';
 
-// axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
-axios.defaults.baseURL = `https://authorify-backend.herokuapp.com/`;
+axios.defaults.baseURL = process.env.REACT_APP_BASE_URL;
+// axios.defaults.baseURL = `https://authorify-backend.herokuapp.com/`;
 
 const axiosGet = async (url) => {
     try {
